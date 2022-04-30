@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "a97ef4cc-91d2-4ddd-ba04-bb9cd332da84",
+		"name": "«ДЗ по постману»",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "35. MagicSearch: проверяем наличие генерального в базе 2 Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let Lun = jsonData.results.filter(el => el.name = \"\"+ pm.variables.get('name-gen') +\"\");\r",
+							"let LunEmail = jsonData.results.filter(el => el.email = \"\"+ pm.variables.get('emai-gen') +\"\");\r",
+							"\r",
+							"\r",
+							"pm.test(\"Проверка статус кода\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([231, 232, 235])\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Проверка имени\", function () {\r",
+							"    pm.expect(Lun[0].name).to.eql(\"\"+ pm.variables.get('name-gen') +\"\") \r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Проверка email\", function () {\r",
+							"    pm.expect(LunEmail[0].email).to.eql(\"\"+ pm.variables.get('emai-gen') +\"\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Проверка name1 выполнено\", function () {\r",
+							"    pm.expect(Lun[0].name1).to.eql('Олег')\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Проверка surname1 выполнено\", function () {\r",
+							"    pm.expect(Lun[0].surname1).to.eql('Лунатиков')\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Проверка fathername1 выполнено\", function () {\r",
+							"    pm.expect(Lun[0].fathername1).to.eql('Михайлович')\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Проверка birthday выполнено\", function () {\r",
+							"    pm.expect(Lun[0].birthday).to.eql('08.09.1985')\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Проверка phone выполнено\", function () {\r",
+							"    pm.expect(Lun[0].phone).to.eql('8-906-1112233')\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let NameRandomInt = pm.environment.set('name-gen', pm.variables.replaceIn('Лунатиков Олег Михайлович{{$randomInt}}'));\r",
+							"let EmailRandomInt = pm.environment.set('emai-gen', pm.variables.replaceIn('gendir@romashka1{{$randomInt}}.ru'));\r",
+							"\r",
+							"\r",
+							"const echoPostRequest = {\r",
+							"    url: 'http://users.bugred.ru/tasks/rest/createuser',\r",
+							"    method: 'POST',\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            email: \"\"+ pm.variables.get('emai-gen') +\"\",\r",
+							"            name: \"\"+ pm.variables.get('name-gen') +\"\",\r",
+							"            hobby:\"Sport\",\r",
+							"            adres:\"pl. Lenina\",\r",
+							"            name1:\"Олег\",\r",
+							"            surname1:\"Лунатиков\",\r",
+							"            fathername1:\"Михайлович\",\r",
+							"            phone: \"8-906-1112233\",\r",
+							"            gender:\"m\",\r",
+							"            birthday: \"08.09.1985\",\r",
+							"            companies: [21],\r",
+							"            tasks: [12]\r",
+							"        })\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"\r",
+							"pm.sendRequest(echoPostRequest, function (err, res) {\r",
+							"    console.log(err ? err : res.json().message);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json, application/xml, form-data",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query\": \"Лунатиков\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://users.bugred.ru/tasks/rest/magicsearch",
+					"protocol": "http",
+					"host": [
+						"users",
+						"bugred",
+						"ru"
+					],
+					"path": [
+						"tasks",
+						"rest",
+						"magicsearch"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
